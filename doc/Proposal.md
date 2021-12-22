@@ -19,7 +19,7 @@ I will then test using the test dataset. I will use the K-Means categoriser to s
 
 See Figure 1 for a flow chart illustrating the resulting system.
 
-![Model of resulting system](img/model.png "Model of resulting system")
+![Model of resulting system](../img/model.png "Model of resulting system")
 
 ### Benchmark Model
 Since there are no public models that provide a significantly better than market level of return, I will be comparing the resulting system against 3 models, one which always buys gold, ultimately tracking the market return, another which always sells, and finally, another which randomly picks whether to buy or sell.
