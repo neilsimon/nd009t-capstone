@@ -1,3 +1,3 @@
 # nd009t-capstone
-Read the Proposal.pdf file for details of the proposed project.
+Read the doc/Proposal.pdf file for details of the proposed project.
 The datasets are stored in the datasets directory.
