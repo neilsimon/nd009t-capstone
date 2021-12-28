@@ -2,7 +2,10 @@ import argparse
 import os
 from pprint import pprint
 
+import yaml
 from autogluon.tabular import TabularDataset, TabularPredictor
+
+from io import StringIO
 
 import numpy as np
 
@@ -12,6 +15,38 @@ import autogluon as ag
 from autogluon.tabular import TabularPredictor
 
 import argparse
+
+def model_fn(model_dir):
+    """loads model from previously saved artifact"""
+    model = TabularPredictor.load(model_dir)
+    globals()["column_names"] = model.feature_metadata_in.get_features()
+    return model
+
+
+def transform_fn(model, request_body, input_content_type, output_content_type="application/json"):
+
+    if input_content_type == "text/csv":
+        buf = StringIO(request_body)
+        data = pd.read_csv(buf, header=None)
+        num_cols = len(data.columns)
+
+        if num_cols != len(column_names):
+            raise Exception(
+                f"Invalid data format. Input data has {num_cols} while the model expects {len(column_names)}"
+            )
+
+        else:
+            data.columns = column_names
+
+    else:
+        raise Exception(f"{input_content_type} content type not supported")
+
+    pred = model.predict(data)
+    pred_proba = model.predict_proba(data)
+    prediction = pd.concat([pred, pred_proba], axis=1).values
+
+    return json.dumps(prediction.tolist()), output_content_type
+
 
 def get_input_path(path):
     file = os.listdir(path)[0]
@@ -67,7 +102,8 @@ if __name__ == "__main__":
     # ---------------------------------------------------------------- Training
 
     train_file = get_input_path(args.training_dir)
-    train_data = TabularDataset(train_file)
+    train_data = TabularDataset(train_file, ).drop(columns=['Cluster'])
+    train_data.set_index('Date')
 
     ag_predictor_args = config["ag_predictor_args"]
     ag_predictor_args["path"] = args.model_dir
@@ -79,7 +115,8 @@ if __name__ == "__main__":
 
     if args.test_dir:
         test_file = get_input_path(args.test_dir)
-        test_data = TabularDataset(test_file)
+        test_data = TabularDataset(test_file).drop(columns=['Cluster'])
+        test_data.set_index('Date')
 
         # Predictions
         y_pred_proba = predictor.predict_proba(test_data)

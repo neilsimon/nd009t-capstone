@@ -1,8 +1,8 @@
 # AutoGluon Predictor constructor arguments
 # - see https://github.com/awslabs/autogluon/blob/ef3a5312dc2eaa0c6afde042d671860ac42cbafb/tabular/src/autogluon/tabular/predictor/predictor.py#L51-L159
 ag_predictor_args:
-  eval_metric: roc_auc
-  label: class
+  eval_metric: "root_mean_squared_error"
+  label: "Tomorrow Gold Return"
 
 # AutoGluon Predictor.fit arguments
 # - see https://github.com/awslabs/autogluon/blob/ef3a5312dc2eaa0c6afde042d671860ac42cbafb/tabular/src/autogluon/tabular/predictor/predictor.py#L280-L651
