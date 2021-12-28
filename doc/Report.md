@@ -7,6 +7,7 @@ December 22, 2021
 _(approx. 1-2 pages)_
 
 ### Project Overview
+
 In this section, look to provide a high-level overview of the project in layman’s terms. Questions to ask yourself when writing this section:
 - _Has an overview of the project been provided, such as the problem domain, project origin, and related datasets or input data?_
 - _Has enough background information been given so that an uninformed reader would understand the problem domain and following problem statement?_
@@ -27,6 +28,14 @@ In this section, you will need to clearly define the metrics or calculations you
 _(approx. 2-4 pages)_
 
 ### Data Exploration
+I have used a combination of 2 different datasets, one is the price of gold and the other the closing price of the S&P 500 between 2006-01-10 and 2021-12-03. By combining these two I created a third dataset with the date, gold price and S&P 500 closing price. From this I generated the gold return for the ranges of today's return, 2 day's return ending yesterday, 4 day's return ending 3 days back, and 8 day's return ending 7 days back. The general formula for this is by $r_{(x,y)}=\frac{p_{n-x}-p_{n-x-y}}{p_{n-x-y}}$, where $p_{n}$ is todays gold price, and $p_{n-1}$ is yesterday's gold price, $x$ is the number of days back we are looking to find the return at and $y$ is the number of days over which the return is calculated. So for today's return (1 day's return ending today) $x=0$ and $y=1$, and for 4 day's return ending 3 days back $x=3$ and $y=4$.
+
+I then normalised these values by getting the 16 day standard deviation and dividing the return's by that (adjusted for the number of days over which the return was calculated). The normalization formula for these is $r\_norm_{xy}=\frac{r_{xy}}{\sigma_{16}*\sqrt{2}{y}}$. This resulted in 4 normalised return values for each day's gold price and a standard deviation value.
+
+I applied the same approach to the S&P data to create 4 normalised return values for each day, and a standard deviation value. Resulting in a total of 10 new values of information for each day.
+
+Ultimately, it is the one day future return ($\overline{r}_{(-1,1)}$) we are looking to calculate as from that we can determine tomorrow's price as we know today's price. 
+
 In this section, you will be expected to analyze the data you are using for the problem. This data can either be in the form of a dataset (or datasets), input data (or input files), or even an environment. The type of data should be thoroughly described and, if possible, have basic statistics and information presented (such as discussion of input features or defining characteristics about the input or environment). Any abnormalities or interesting qualities about the data that may need to be addressed have been identified (such as features that need to be transformed or the possibility of outliers). Questions to ask yourself when writing this section:
 - _If a dataset is present for this problem, have you thoroughly discussed certain features about the dataset? Has a data sample been provided to the reader?_
 - _If a dataset is present for this problem, are statistics about the dataset calculated and reported? Have any relevant results from this calculation been discussed?_
