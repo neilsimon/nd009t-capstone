@@ -241,6 +241,14 @@ The 5 successful runs of the system, with K sizes 1, 2, 4, 8, and 16 were compar
 
 Based on these results, were we implementing a long term production version of this tool, we would use the 16 Clusters configuration as it gives better return, and has higher level of accuracy and precision, indicating that it is a better fit. That said, the comparatively high value for the root-mean-square error (RMSE) does indicate a relatively high level of deviation from the actual daily return and therefore a relatively high risk.
 
+Figure 12 shows the above table in chart form.
+
+![Results](../img/Prediction Accuracy Chart.png "Results")
+
+Figure 13 shows the relationship between cluster count, and training and deploy time.
+
+![Training and Deploy Time](../img/Train Time.png "Training and Deploy Time")
+
 ### Justification
 As we can see, the clustered approach as described above did not achieve particularly great results, generally failing to beat the always buy/hold and not even consistently achieving better results than the coin flip approach to trading. The 2 configurations that did achieve better results than the market (the always buy approach) were the 4 cluster and 16 cluster approaches. I suspect that this was more due to random chance than anything else, but the 16 Cluster configuration does show some promise. Its particularly high relative return, and accuracy suggest that it may be possible to use it to beat the market over the long term. That said, the data required to test this does not exist as we would need a large number of values to have any significant degree of certainty.
 
@@ -252,7 +260,7 @@ Ultimately, none of these configurations is expected to beat the strategy of alw
 
 ### Free-Form Visualization
 
-As we can see (Figure 12) when we apply the 16 cluster configuration to the test data, it does give an above market return, generally following the market itself but usually doing better. Interestingly though, it does for a period actually drop below the market return, so it cannot be considered to give consistently good predictions. The relatively chaotic nature of the market and the fact that return is multiplicative, means that even a relatively good performing system may well underperform the market over significant time frames, and similarly that relatively low accuracy systems might even outperform the market over such too.
+As we can see (Figure 14) when we apply the 16 cluster configuration to the test data, it does give an above market return, generally following the market itself but usually doing better. Interestingly though, it does for a period actually drop below the market return, so it cannot be considered to give consistently good predictions. The relatively chaotic nature of the market and the fact that return is multiplicative, means that even a relatively good performing system may well underperform the market over significant time frames, and similarly that relatively low accuracy systems might even outperform the market over such too.
 
 ![16 Cluster Return](../img/16 Cluster Return.png "16 Cluster Return")
 
