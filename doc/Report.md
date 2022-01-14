@@ -227,16 +227,17 @@ Additionally, I changed the configuration used for training the Tabular Predicto
 
 The 5 successful runs of the system, with K sizes 1, 2, 4, 8, and 16 were compared with the market return, idealised return and fair coin flip return. The following results were achieved:
 
-| Configuration | C. Return | R. Return | Accuracy  | Precision | Recall    | F-Measure | RMSE      | Train (s) |
-|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| Unclustered   | 0.813     | 0.627     | 0.467     | 0.530     | 0.130     | 0.209     | 0.010     | 1255      |
-| 2 Clusters    | 0.978     | 0.754     | 0.485     | 0.543     | 0.305     | 0.391     | 0.027     | 1933      |
-| 4 Clusters    | 1.191     | 0.919     | 0.500     | 0.537     | 0.549     | 0.543     | 0.038     | 2614      |
-| 8 Clusters    | 0.924     | 0.713     | 0.487     | 0.534     | 0.406     | 0.461     | 0.049     | 4105      |
-| 16 Clusters   | 1.869     | 1.442     | 0.523     | 0.572     | 0.473     | 0.518     | 0.148     | 7653      |
-| Coin Flip     | 1.000     | 0.772     | 0.500     | 0.541     | 0.500     | 0.520     |           |           |
-| Market Return | 1.296     | 1.000     | 0.541     | 0.541     | 1.000     | 0.702     |           |           |
-| Always Sell   | 0.706     | 0.545     | 0.459     | 0.000     | 0.000     | 0.000     |           |           |
+
+| ^Configuration^   | ^C.\ Return^ | ^R.\ Return^ | ^Accuracy^  | ^Precision^ | ^Recall^    | ^F-Measure^ | ^RMSE^      | ^Train(s)^ |
+|-------------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| ^Unclustered^     | ^0.813^     | ^0.627^     | ^0.467^     | ^0.530^     | ^0.130^     | ^0.209^     | ^0.010^     | ^1255^      |
+| ^2\ Clusters^    | ^0.978^     | ^0.754^     | ^0.485^     | ^0.543^     | ^0.305^     | ^0.391^     | ^0.027^     | ^1933^      |
+| ^4\ Clusters^    | ^1.191^     | ^0.919^     | ^0.500^     | ^0.537^     | ^0.549^     | ^0.543^     | ^0.038^     | ^2614^      |
+| ^8\ Clusters^    | ^0.924^     | ^0.713^     | ^0.487^     | ^0.534^     | ^0.406^     | ^0.461^     | ^0.049^     | ^4105^      |
+| ^16\ Clusters^   | ^1.869^     | ^1.442^     | ^0.523^     | ^0.572^     | ^0.473^     | ^0.518^     | ^0.148^     | ^7653^      |
+| ^Coin\ Flip^     | ^1.000^     | ^0.772^     | ^0.500^     | ^0.541^     | ^0.500^     | ^0.520^     |           |           |
+| ^Market\ Return^ | ^1.296^     | ^1.000^     | ^0.541^     | ^0.541^     | ^1.000^     | ^0.702^     |           |           |
+| ^Always\ Sell^   | ^0.706^     | ^0.545^     | ^0.459^     | ^0.000^     | ^0.000^     | ^0.000^     |           |           |
 
 Based on these results, were we implementing a long term production version of this tool, we would use the 16 Clusters configuration as it gives better return, and has higher level of accuracy and precision, indicating that it is a better fit. That said, the comparatively high value for the root-mean-square error (RMSE) does indicate a relatively high level of deviation from the actual daily return and therefore a relatively high risk.
 
@@ -251,7 +252,7 @@ Ultimately, none of these configurations is expected to beat the strategy of alw
 
 ### Free-Form Visualization
 
-As we can see from the 16 cluster configuration when applied to the test data, it does give an above market return, generally following the market itself but usually doing better. Interestingly though, it does for a period actually drop below the market return, so it cannot be considered to give consistently good predictions. The relatively chaotic nature of the market and the fact that return is multiplicative, means that even a relatively good performing system may well underperform the market over significant time frames, and that relatively low accuracy systems might even outperform the market over such too.
+As we can see (Figure 12) when we apply the 16 cluster configuration to the test data, it does give an above market return, generally following the market itself but usually doing better. Interestingly though, it does for a period actually drop below the market return, so it cannot be considered to give consistently good predictions. The relatively chaotic nature of the market and the fact that return is multiplicative, means that even a relatively good performing system may well underperform the market over significant time frames, and similarly that relatively low accuracy systems might even outperform the market over such too.
 
 ![16 Cluster Return](../img/16 Cluster Return.png "16 Cluster Return")
 
