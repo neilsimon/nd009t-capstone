@@ -10,7 +10,7 @@
 Predicting changes in the value of gold has obvious financial benefit including knowing when to buy or sell and determining future volatility. Historically, gold has been used as a currency, either directly or as backing for a paper currency (Gold's history as a currency standard, 2010) and it has proven to be a useful asset to hold during times of economic downturn and uncertainty. This is despite the relatively small role it plays as a functional material in the modern world.
 The efficient market hypothesis (EMH) suggests that the market price reflects all information and that it should be impossible to consistently predict future prices of gold, and in particular, that it is impossible to consistently get returns greater than market level returns (Fama, E. F., 1970). Therefore, any system which is able to beat the market consistently would not only provide significant avenues for financial return, but also demonstrate that the EMH is not perfectly supported.
 In this project, I implemented a system which divides gold prices into clusters using a K-Means predictor and related historical data, and based on the predicted cluster, uses a Tabular Predictor trained for that cluster to determine a predicted 1 day future return on gold.
-Having analysed the results, and compared them with naive trading strategies, I have determined that none of the setups resulted in a system capable of predicting the future value of gold with any significant degree of accuracy.
+Having analysed the results, and compared them with naive trading strategies, I have determined that none of the configurations resulted in a system capable of predicting the future value of gold with any significant degree of accuracy.
 
 ### Problem Statement
 
@@ -26,7 +26,7 @@ The problem I attempted to solve is to predict the next day's gold price based o
 1. Iterate with different numbers for K (different numbers of clusters).
 1. Evaluate final results.
 
-By comparing predicted return and therefore price of gold with the actual market price I determined how accurately the model predicts such and the associated level of risk. Additionally, based on these predictions I extrapolated an expected return of the model over a long period and compare such with the actual market return and with other naive trading strategies.
+By comparing predicted return and therefore price of gold with the actual market price I determined how accurately the model predicts such and the associated level of risk. Additionally, based on these predictions I extrapolated an expected return of the model over a long period and compare such with the actual market return (always buy/hold strategy) and with other naive trading strategies.
 
 ### Metrics
 
@@ -50,7 +50,7 @@ $$order_{recommended}=\begin{cases}
 Thus the actual cumulative return, if following this strategy of trading recommended by the predicted values, is:
 $$c\_return_{recommended}=(1 + order_1 * return_1) * (1 + order_2 * return_2) * ... $$
 
-Thus we can compare the return that following the recommended system would give us, the return that simply holding gold would (simply the market return) and a fair random coin (an average cumulative return of 1). For comparing returns, it makes most sense to consider the market as the baseline and view the relative cumulative return of the recommendation system:
+Thus we can compare the return that following the recommended system would give us, the return that simply buying/holding gold would (the market return) and a fair random coin (an average cumulative return of 1). For comparing returns, it makes most sense to consider the market as the baseline and view the relative cumulative return of the recommendation system:
 
 $$r\_return_{recommended}=\frac{c\_return_{recommended}}{c\_return}$$
 
@@ -115,7 +115,7 @@ For the purposes of visualisation, I created a chart showing the closing prices 
 
 From this we can see that the closing prices do have some degree of relationship, but not necessarily a very close one. I further decided to create a chart showing the price relative to the price at halfway through the dataset:
 
-![Gold and S&P 500 Return Realtive to Midpoint](../img/Gold and S&P 500 return midpoint.png "Gold and S&P 500 Return Realtive to Midpoint")
+![Gold and S&P 500 Return Relative to Midpoint](../img/Gold and S&P 500 return midpoint.png "Gold and S&P 500 Return Relative to Midpoint")
 
 This chart shows a closer relationship. We can see a similar slope, but that when the S&P 500 market deviates down from that slope, the gold price increases, and vice versa. This suggests that gold is being treated as a safe haven for investors when the S&P 500 is performing poorly, and the S&P 500 is generally seen as a good indicator of the stock market in general. This in fact is the general consensus (Chen, 2021).
 
@@ -123,7 +123,7 @@ It is hoped that this feature of the price relationship between gold and the S&P
 
 ### Algorithms and Techniques
 
-I decided to add further information to each day's data to add 16 days worth of historical information to that day's data, and in so doing intended to provide relevant technical data about the historical price of gold and the S&P 500 over the preceeding days.
+I decided to add further information to each day's data to add 16 days worth of historical information to that day's data, and in so doing intended to provide relevant technical data about the historical price of gold and the S&P 500 over the preceding days.
 
 I decided to use a K-Means clustering algorithm to separate days into clusters based on the additional historical data added to each day's dataset. This was done to try to find days with similar historical trading returns, and cluster them together. Essentially, this would group certain "shapes" of trading patterns together.
 
@@ -150,10 +150,9 @@ These benchmarks are all possible to derive trivially from the historical data, 
 
 The average return of a fair coin flip is 1 as the daily return is either positive or negative by the same proportion and with equal likelihood. The market return is easily gathered by just using the cumulative return as described in Metrics. Similarly, the ideal return is also described in the Metrics above.
 
-There are no publically available models which perform significantly better than market return, so there are no other models against which it makes sense to compare.
+There are no publicly available models which perform significantly better than market return, so there are no other models against which it makes sense to compare.
 
 ## III. Methodology
-_(approx. 3-5 pages)_
 
 ### Data Preprocessing
 
@@ -164,9 +163,9 @@ _(approx. 3-5 pages)_
 
 From this dataset I generated the gold return for the ranges of 1 day's return, 2 day's return ending yesterday, 4 day's return ending 3 days back, and 8 day's return ending 7 days back. The general formula for this is:
 $$return_{(x,y)}=\frac{p_{n-x}-p_{n-x-y}}{p_{n-x-y}}$$
-Where $p_{n}$ is todays gold price, and $p_{n-1}$ is yesterday's gold price, etc., $x$ is the number of days back we are looking to find the return at, and $y$ is the number of days over which the return is calculated. So for today's return (1 day's return ending today) $x=0$ and $y=1$, and for 4 day's return ending 3 days back $x=3$ and $y=4$.
+Where $p_{n}$ is today's gold price, and $p_{n-1}$ is yesterday's gold price, etc., $x$ is the number of days back we are looking to find the return at, and $y$ is the number of days over which the return is calculated. So for today's return (1 day's return ending today) $x=0$ and $y=1$, and for 4 day's return ending 3 days back $x=3$ and $y=4$.
 
-I then normalised these features by getting the 16 day standard deviation on daily returns and dividing the return's by that (adjusted for the number of days over which the return was calculated). The normalization formula for these is:
+I then normalised these features by getting the 16 day standard deviation on daily returns and dividing the returns by that (adjusted for the number of days over which the return was calculated). The normalization formula for these is:
 $$return\_norm_{xy}=\frac{r_{xy}}{\sigma_{16}*\sqrt{2}{y}}$$
 This resulted in 4 normalised return values for each day's gold price and a standard deviation value.
 
@@ -196,7 +195,7 @@ I determined that for the purposes of this project, the data was well formatted 
 
 Figures 4 through 11 show that we are dealing with relatively suitable data for analysis as it is close to normally distributed.
 
-Additionally, this data was split into two sets of data for training and testing. The training set chosen was the first 3000 days of trading and the testing set was the last 992 days. The reason for not randomising this data before splitting into training and testing sets is that in doing so we could potentially introduce information about the future in the training data relative to the testing data, giving it a degree of knowledege of what trading patterns would be like in future relative to the data on which it was testing. Such would entirely defeat the purpose of this system as we do not and cannot train on data set in the future.
+Additionally, this data was split into two sets of data for training and testing. The training set chosen was the first 3000 days of trading and the testing set was the last 992 days. The reason for not randomising this data before splitting into training and testing sets is that in doing so we could potentially introduce information about the future in the training data relative to the testing data, giving it a degree of knowledge of what trading patterns would be like in future relative to the data on which it was testing. Such would entirely defeat the purpose of this system as we do not and cannot train on data set in the future.
 
 ### Implementation
 
@@ -206,7 +205,7 @@ I then split this data into training and testing data with 3000 days in the form
 
 For the purposes of the K-Means algorithm, I created versions of the data with the required features ('Normalised Gold Return', 'Normalised Gold Return 2 day back 1', 'Normalised Gold Return 4 day back 3', 'Normalised Gold Return 8 day back 7', 'Var 16 day', 'Normalised S&P Return', 'Normalised S&P Return 2 day back 1', 'Normalised S&P Return 4 day back 3', 'Normalised S&P Return 8 day back 7', 'Var 16 day.1'). This resulted in 10 features upon which the clustering algorithm would work.
 
-To create a K-Means endpoint, I used the sagemaker library KMeans and trained it on the training set for the desired number of clusters (K initially set to 4). With the resulting model, I deployed a predictor endpoint and used that to get the clusters for each of the training and testing rows. I added this additional cluster information to the training and testing data for use with the Tabular Predictor.
+To create a K-Means endpoint, I used the SageMaker library KMeans and trained it on the training set for the desired number of clusters (K initially set to 4). With the resulting model, I deployed a predictor endpoint and used that to get the clusters for each of the training and testing rows. I added this additional cluster information to the training and testing data for use with the Tabular Predictor.
 
 To train the Tabular Predictors, I used an AutoGluon auto-ml setup derived from the AutoGluon SageMaker tutorials (Cloud Training with AWS SageMaker, n.d) and (Deploying AutoGluon Models with AWS SageMaker, n.d). These referenced a code repository from which the remaining code for training and deploying Tabular Predictors is derived (https://github.com/aws/amazon-sagemaker-examples/tree/master/advanced_functionality/autogluon-tabular-containers). The script was significantly modified to make it suitable for both training and predicting (https://github.com/neilsimon/nd009t-capstone/blob/main/scripts/hpo.py).
 
@@ -223,85 +222,74 @@ The largest refinement I undertook was to vary the number of clusters used. I ha
 Additionally, I changed the configuration used for training the Tabular Predictor after the first run as it was very quick in training using a "medium\_quality\_faster\_train" preset (https://github.com/neilsimon/nd009t-capstone/blob/main/ag_configs/config-med.yaml), so moving to the "best\_quality" preset (https://github.com/neilsimon/nd009t-capstone/blob/main/ag_configs/config-full.yaml) incurred only a small relative overall hit in processing time.
 
 ## IV. Results
-_(approx. 2-3 pages)_
 
 ### Model Evaluation and Validation
 
 The 5 successful runs of the system, with K sizes 1, 2, 4, 8, and 16 were compared with the market return, idealised return and fair coin flip return. The following results were achieved:
 
-| Run Type    | C. Return | R. Return | Accuracy  | Precision | Recall    | F-Measure | RMSE      | T+D (s)   |
-|-------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
-| 1 Cluster   | 0.813     | 0.627     | 0.467     | 0.530     | 0.130     | 0.209     | 0.010     | 1255      |
-| 2 Clusters  | 0.978     | 0.754     | 0.485     | 0.543     | 0.305     | 0.391     | 0.027     | 1933      |
-| 4 Clusters  | 1.191     | 0.919     | 0.500     | 0.537     | 0.549     | 0.543     | 0.038     | 2614      |
-| 8 Clusters  | 0.924     | 0.713     | 0.487     | 0.534     | 0.406     | 0.461     | 0.049     | 4105      |
-| 16 Clusters | 1.869     | 1.442     | 0.523     | 0.572     | 0.473     | 0.518     | 0.148     | 7653      |
-| Coin Flip   | 1.000     | 0.772     | 0.500     | 0.541     | 0.500     | 0.520     |           |           |
-| Always Buy  | 1.296     | 1.000     | 0.541     | 0.541     | 1.000     | 0.702     |           |           |
-| Always Sell | 0.706     | 0.545     | 0.459     | 0.000     | 0.000     | 0.000     |           |           |
+| Configuration | C. Return | R. Return | Accuracy  | Precision | Recall    | F-Measure | RMSE      | Train (s) |
+|---------------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|-----------|
+| Unclustered   | 0.813     | 0.627     | 0.467     | 0.530     | 0.130     | 0.209     | 0.010     | 1255      |
+| 2 Clusters    | 0.978     | 0.754     | 0.485     | 0.543     | 0.305     | 0.391     | 0.027     | 1933      |
+| 4 Clusters    | 1.191     | 0.919     | 0.500     | 0.537     | 0.549     | 0.543     | 0.038     | 2614      |
+| 8 Clusters    | 0.924     | 0.713     | 0.487     | 0.534     | 0.406     | 0.461     | 0.049     | 4105      |
+| 16 Clusters   | 1.869     | 1.442     | 0.523     | 0.572     | 0.473     | 0.518     | 0.148     | 7653      |
+| Coin Flip     | 1.000     | 0.772     | 0.500     | 0.541     | 0.500     | 0.520     |           |           |
+| Market Return | 1.296     | 1.000     | 0.541     | 0.541     | 1.000     | 0.702     |           |           |
+| Always Sell   | 0.706     | 0.545     | 0.459     | 0.000     | 0.000     | 0.000     |           |           |
 
-As we can see, the clustered approach as described above did not achieve particularly great results, generally failing to beat the naive approach of always buying and not even consistantly achieving better results than the coin flip approach to trading. The 2 setups that did achieve better results than the market (the always buying approach) were the 4 cluster and 16 cluster approaches. I suspect that this was more due to random chance than anything else.
-
-
-In this section, the final model and any supporting qualities should be evaluated in detail. It should be clear how the final model was derived and why this model was chosen. In addition, some type of analysis should be used to validate the robustness of this model and its solution, such as manipulating the input data or environment to see how the model’s solution is affected (this is called sensitivity analysis). Questions to ask yourself when writing this section:
-- _Is the final model reasonable and aligning with solution expectations? Are the final parameters of the model appropriate?_
-- _Has the final model been tested with various inputs to evaluate whether the model generalizes well to unseen data?_
-- _Is the model robust enough for the problem? Do small perturbations (changes) in training data or the input space greatly affect the results?_
-- _Can results found from the model be trusted?_
+Based on these results, were we implementing a long term production version of this tool, we would use the 16 Clusters configuration as it gives better return, and has higher level of accuracy and precision, indicating that it is a better fit. That said, the comparatively high value for the root-mean-square error (RMSE) does indicate a relatively high level of deviation from the actual daily return and therefore a relatively high risk.
 
 ### Justification
-In this section, your model’s final solution and its results should be compared to the benchmark you established earlier in the project using some type of statistical analysis. You should also justify whether these results and the solution are significant enough to have solved the problem posed in the project. Questions to ask yourself when writing this section:
-- _Are the final results found stronger than the benchmark result reported earlier?_
-- _Have you thoroughly analyzed and discussed the final solution?_
-- _Is the final solution significant enough to have solved the problem?_
+As we can see, the clustered approach as described above did not achieve particularly great results, generally failing to beat the always buy/hold and not even consistently achieving better results than the coin flip approach to trading. The 2 configurations that did achieve better results than the market (the always buy approach) were the 4 cluster and 16 cluster approaches. I suspect that this was more due to random chance than anything else, but the 16 Cluster configuration does show some promise. Its particularly high relative return, and accuracy suggest that it may be possible to use it to beat the market over the long term. That said, the data required to test this does not exist as we would need a large number of values to have any significant degree of certainty.
 
+The low values for recall and f-measure, combined with the relatively high RMSE suggest that the risk associated with the 16 cluster configuration is rather high. In particular, the relatively high RMSE when compared with configurations with fewer tabular predictor systems (fewer clusters, or a single cluster/unclustered) suggests that the amount of data used for training was too small. The average size of training set would have been 188 rows, which is rather small and would lead to an underfit model. Unfortunately there is no way to add more data for training, as any such data would have to extend further back in time and would likely be less relevant to current trading.
+
+Ultimately, none of these configurations is expected to beat the strategy of always buying and holding gold as they provide either too much risk or a lower relative return.
 
 ## V. Conclusion
-_(approx. 1-2 pages)_
 
 ### Free-Form Visualization
-In this section, you will need to provide some form of visualization that emphasizes an important quality about the project. It is much more free-form, but should reasonably support a significant result or characteristic about the problem that you want to discuss. Questions to ask yourself when writing this section:
-- _Have you visualized a relevant or important quality about the problem, dataset, input data, or results?_
-- _Is the visualization thoroughly analyzed and discussed?_
-- _If a plot is provided, are the axes, title, and datum clearly defined?_
+
+As we can see from the 16 cluster configuration when applied to the test data, it does give an above market return, generally following the market itself but usually doing better. Interestingly though, it does for a period actually drop below the market return, so it cannot be considered to give consistently good predictions. The relatively chaotic nature of the market and the fact that return is multiplicative, means that even a relatively good performing system may well underperform the market over significant time frames, and that relatively low accuracy systems might even outperform the market over such too.
+
+![16 Cluster Return](../img/16 Cluster Return.png "16 Cluster Return")
 
 ### Reflection
-In this section, you will summarize the entire end-to-end problem solution and discuss one or two particular aspects of the project you found interesting or difficult. You are expected to reflect on the project as a whole to show that you have a firm understanding of the entire process employed in your work. Questions to ask yourself when writing this section:
-- _Have you thoroughly summarized the entire process you used for this project?_
-- _Were there any interesting aspects of the project?_
-- _Were there any difficult aspects of the project?_
-- _Does the final model and solution fit your expectations for the problem, and should it be used in a general setting to solve these types of problems?_
+
+The initial problem was to find a potentially novel approach to predict gold values, and to ultimately determine if such a system could show some weakness in the Efficient Market Hypothesis. While I considered a variety of possible solutions, I decided that a combined system using a clustering step and an auto-ml trained predictor was novel enough and possibly effective. I decided that the clustering approach should attempt to discern something about the *shape* of trading in gold and another source of market information (the S&P 500) over the past few days and the predictor use that same data to estimate future prices. The derived features used were intentionally kept to a small number so that clustering could be more effective.
+
+Interestingly, by increasing the number of clusters, the system seemed to perform better. This is despite the worsening RMSE. This suggests that the tabular predictor was not very effective, but that potentially the clustering was somewhat effective.
+
+The challenges associated with deploying an Autogluon Tabular Predictor was not insignificant, but ultimately the availability of suitable sample scripts made it somewhat manageable. Another area of challenge was the AWS limit of 30 servers, making it impossible to train and deploy a 32 cluster system. It is possible that such a system would give better results.
+
+Ultimately, the final result was in keeping with my expectations. It was highly unlikely that I would find a model capable of beating the market significantly, and while I suspect that the EMH is not completely correct, the likelihood of finding an exploitable trading strategy is rather small. I achieved results essentially in line with my expectations.
 
 ### Improvement
-In this section, you will need to provide discussion as to how one aspect of the implementation you designed could be improved. As an example, consider ways your implementation can be made more general, and what would need to be modified. You do not need to make this improvement, but the potential solutions resulting from these changes are considered and compared/contrasted to your current solution. Questions to ask yourself when writing this section:
-- _Are there further improvements that could be made on the algorithms or techniques you used in this project?_
-- _Were there algorithms or techniques you researched that you did not know how to implement, but would consider using if you knew how?_
-- _If you used your final solution as the new benchmark, do you think an even better solution exists?_
+
+There are a number of improvements I feel could be made to this system:
+
+* Add other sources of market information, not just one (S&P 500). These could include other commodities such as oil, silver, etc. or other market indices, such as the Dow Jones Industrial, FTSE 100, DAX, Nikkei 225, ISEQ, etc.
+* Add sources of non-market information, such as public sentiment, references to gold in media headlines, etc.
+* Use far more of the historic market data for the tabular predictors, not just the same derived features used for clustering, but the actual prices going back many days. The limiting of the derived features as used for the clustering makes sense, but that same limit does not apply for the tabular predictors.
+* Train the system on the data to the date for which the prediction is being made, ultimately not using the same traditional training/test split. This will allow the system to reflect the latest information while not having any future looking.
+* Train and test system to predict other commodities and market prices.
+
+Ultimately, there are many avenues for possible improvements, and I do think that the approach of using clustering followed by another predictor is promising, not just in the area of predicting market prices, but to provide systems trained to handle other tasks where the input may be even more readily divided into clusters and having predictors trained to be specialists in their own cluster would be more useful. For instance, a system designed to identify vehicles may use clusters that ultimately correspond to the different vehicle classifications, and another predictor which is an expert in identifying with that particular class of vehicle.
 
 -----------
-
-**Before submitting, ask yourself. . .**
-
-- Does the project report you’ve written follow a well-organized structure similar to that of the project template?
-- Is each section (particularly **Analysis** and **Methodology**) written in a clear, concise and specific fashion? Are there any ambiguous terms or phrases that need clarification?
-- Would the intended audience of your project be able to understand your analysis, methods, and results?
-- Have you properly proof-read your project report to assure there are minimal grammatical and spelling mistakes?
-- Are all the resources used for this project correctly cited and referenced?
-- Is the code that implements your solution easily readable and properly commented?
-- Does the code execute without error and produce results similar to those reported?
-
-
-https://auto.gluon.ai/dev/tutorials/cloud_fit_deploy/cloud-aws-sagemaker-training.html
-https://auto.gluon.ai/dev/tutorials/cloud_fit_deploy/cloud-aws-sagemaker-deployment.html
-
 
 References:
 
 * Gold's history as a currency standard. (2010). Retrieved from https://www.reuters.com/article/idINIndia-52748720101108
 * Fama, E. F. (1970). Efficient Capital Markets: A Review of Theory and Empirical Work. The Journal of Finance, 25(2), 383–417. https://doi.org/10.2307/2325486
 * Chen, J. (2021). Safe Haven. Retrieved from https://www.investopedia.com/terms/s/safe-haven.asp
-
 * Raghuram, K. S. Statistical, Machine Learning predictive analytics and the impact of stock market indicators in predicting gold prices.
 * Riazuddin, M. Predicting Gold Prices Using Machine Learning (2020). Retrieved from https://towardsdatascience.com/machine-learning-to-predict-gold-price-returns-4bdb0506b132
 * Shah & Pachanekar (2021). Gold Price Prediction Using Machine Learning In Python. Retrieved from https://blog.quantinsti.com/gold-price-prediction-using-machine-learning-python/
 * Datta P. (2021). Building A Gold Price Prediction Model Using Machine Learning. Retrieved from https://www.analyticsvidhya.com/blog/2021/07/building-a-gold-price-prediction-model-using-machine-learning/
+* Cloud Training with AWS SageMaker. (n.d.). Retrieved from https://auto.gluon.ai/dev/tutorials/cloud_fit_deploy/cloud-aws-sagemaker-training.html
+* Deploying AutoGluon Models with AWS SageMaker. (n.d.). Retrieved from https://auto.gluon.ai/dev/tutorials/cloud_fit_deploy/cloud-aws-sagemaker-deployment.html
+
+
+
