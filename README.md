@@ -11,6 +11,8 @@ This project is intended to be run from withing AWS.
 4. Read the notebook and run it. You may wish to change the number of clusters, or other aspects of the notebook.
 5. If you have any feedback, please make a fork of this project and work on it. I would love to hear if it works for you and if you found anything interesting.
 
-* Read the doc/Report.pdf file for details of the completed project.
-* Read the doc/Proposal.pdf file for details of the proposed project.
+## Notes
+
+* Read the doc/Report.pdf file for a report detailing the completed project.
+* Read the doc/Proposal.pdf file for details of the proposal for creating this project.
 * The datasets are stored in the datasets directory.
